@@ -4,23 +4,25 @@ export default function useFAQ() {
 	const [query, setQuery] = useState("")
 	const [answers, setAnswers] = useState([])
 	const [results, setResults] = useState([])
+	const [isLoading, setIsLoading] = useState(true)
 
 	useEffect(() => {
-		getAnswers(setAnswers)
+		getAnswers(setAnswers, setIsLoading, answers, query, setResults)
 	}, [])
 
 	useEffect(() => {
 		filterAnswers(answers, query, setResults)
-	}, [query])
+	}, [query, answers])
 
 	return {
 		query,
 		setQuery,
 		results,
+		isLoading,
 	}
 }
 
-async function getAnswers(setAnswers) {
+async function getAnswers(setAnswers, setIsLoading) {
 	// get the amount of keywords
 	const keywordsResponse = await fetch(
 		"https://api.real-debrid.com/rest/1.0/support/getKeywords/en",
@@ -58,6 +60,8 @@ async function getAnswers(setAnswers) {
 			},
 		])
 	}
+
+	await setIsLoading(false)
 }
 
 async function filterAnswers(answers, query, setResults) {

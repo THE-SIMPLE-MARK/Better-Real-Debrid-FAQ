@@ -14,6 +14,7 @@ import {
 	AccordionButton,
 	AccordionPanel,
 	AccordionIcon,
+	Spinner,
 } from "@chakra-ui/react"
 import { SearchIcon } from "@chakra-ui/icons"
 import useFAQ from "utils/useFAQ"
@@ -22,7 +23,7 @@ import parseFAQFormatting from "utils/parseFAQFormatting"
 const inter = Inter({ subsets: ["latin"] })
 
 export default function Home() {
-	const { query, setQuery, results } = useFAQ()
+	const { query, setQuery, results, isLoading } = useFAQ()
 
 	return (
 		<>
@@ -58,25 +59,40 @@ export default function Home() {
 						/>
 					</InputGroup>
 
-					<Accordion allowToggle>
-						{results.map((result, index) => {
-							return (
-								<AccordionItem key={index}>
-									<h2>
-										<AccordionButton>
-											<Box as="span" flex="1" textAlign="left">
-												{result.title}
-											</Box>
-											<AccordionIcon />
-										</AccordionButton>
-									</h2>
-									<AccordionPanel pb={4} textAlign="left">
-										{parseFAQFormatting(result.description)}
-									</AccordionPanel>
-								</AccordionItem>
-							)
-						})}
-					</Accordion>
+					{isLoading ? (
+						<Flex
+							justifyContent="center"
+							flexDir="column"
+							gap="10px"
+							w="fit-content"
+						>
+							<Spinner alignSelf="center" size="xl" />
+							<Text>Loading FAQ data...</Text>
+						</Flex>
+					) : (
+						<Accordion allowToggle>
+							{results.map((result, index) => {
+								// don't display empty items
+								if (!result?.title || !result?.description) return null
+
+								return (
+									<AccordionItem key={index}>
+										<h2>
+											<AccordionButton>
+												<Box as="span" flex="1" textAlign="left">
+													{result.title}
+												</Box>
+												<AccordionIcon />
+											</AccordionButton>
+										</h2>
+										<AccordionPanel pb={4} textAlign="left">
+											{parseFAQFormatting(result.description)}
+										</AccordionPanel>
+									</AccordionItem>
+								)
+							})}
+						</Accordion>
+					)}
 				</Container>
 			</Flex>
 		</>
