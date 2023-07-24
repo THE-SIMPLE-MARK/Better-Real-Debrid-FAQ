@@ -53,6 +53,7 @@ export default function Home() {
 							<SearchIcon />
 						</InputLeftElement>
 						<Input
+							disabled={isLoading}
 							placeholder="Search Real Debrid FAQ..."
 							value={query}
 							onChange={e => setQuery(e.target.value)}
