@@ -76,11 +76,16 @@ async function filterAnswers(answers, query, setResults) {
 		)
 	})
 
-	await setResults(Array.from(new Set(filteredAnswers)))
+	// display filtered results when the query is at a notable length (currently 2 chars)
+	// otherwise display all the entries
+	if (query.length >= 2) await setResults(filteredAnswers)
+	else await setResults(answers)
 }
 
 function removeSpecialCharacters(string) {
+	// account for non-strings
 	if (typeof string !== "string") return ""
+
 	return string
 		.toLowerCase()
 		.normalize("NFD") // normalize accented characters
