@@ -48,6 +48,9 @@ export default function parseFAQFormatting(text) {
 		'<span style="color: $1;">$2</span>'
 	)
 
+	// images
+	text = text.replace(/\[img\](.*?)\[\/img\]/gi, '<img src="$1" alt="Image">')
+
 	// new lines
 	text = text.replace(/\n/gi, "<br>")
 
